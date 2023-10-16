@@ -1,37 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
 const Square = props => {
 
+    const { col, row } = props;
+
     return (
-        <button className="square" onClick={props.onClick}>
-            {/* TODO */}
+        <button
+            className="square"
+            onClick={props.onClick}
+        >
+            {props.selected ? "T" : "F"}
         </button>
     );
 }
 
 const Board = props => {
 
-    const renderSquare = (index) => {
-        return <Square key={`square-${index}`} onClick={handleClick} />;
+    const [selected, setSelected] = useState({});
+    
+    const renderSquare = (col, row) => {
+        return (
+                <Square 
+                    col={col} 
+                    row={row} 
+                    key={`square-${col}-${row}`} 
+                    onClick={() => handleClick(col, row)}
+                    selected={col === selected.col && row === selected.row} />
+        )
     }
 
-    const renderLine = index => {
+    const renderLine = rowIndex => {
+
+        const squares = new Array(9).fill(null).map((element, squareIndex) => {
+            return renderSquare(squareIndex, rowIndex);
+        });
+
         return (
-            <div key={`row-${index}`} className="board-row">
+            <div key={`row-${rowIndex}`} className="board-row">
                 {squares}
             </div>
         )
     }
 
-    const handleClick = () => {
-        console.log("clicked!")
+    const handleClick = (col, row) => {
+        setSelected({ col, row})
     }
 
-    const squares = new Array(9).fill(null).map((element, index) => {
-        return renderSquare(index);
-    });
 
     const lines = new Array(9).fill(null).map((element, index) => renderLine(index));
 
@@ -54,6 +70,8 @@ const Game = () => {
 }
 
 // ========================================
+
+document.addEventListener("keydown", event => console.log(event.key));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
