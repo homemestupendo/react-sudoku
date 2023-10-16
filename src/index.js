@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-const Square = props => {
+const Square = ({ number, onClick }) => {
 
     const [currentNumber, setCurrentNumber] = useState(null);
 
     useEffect(() => {
-        setCurrentNumber(props.number ? props.number : currentNumber)
+        setCurrentNumber(number ? number : currentNumber)
     });
 
     return (
         <button
             className="square"
-            onClick={props.onClick}
+            onClick={onClick}
         >
-            {props.number ? props.number : currentNumber}
+            {number ? number : currentNumber}
         </button>
     );
 }
@@ -26,14 +26,13 @@ const Board = () => {
     const [typedNumber, setTypedNumber] = useState(null);
 
     useEffect(() => {
-        document.addEventListener("keydown", event => {
+        document.addEventListener("keydown", ({ key }) => {
 
-            const isValidNumber = /^[1-9]$/i.test(event.key);
+            const isValidNumber = /^[1-9]$/i.test(key);
             if (!isValidNumber) {
                 return;
             }
-            
-            setTypedNumber(event.key);
+            setTypedNumber(key);
         });
     }, [])
 
@@ -42,14 +41,14 @@ const Board = () => {
         const selected = col === selectedColAndRow.col && row === selectedColAndRow.row;
 
         return (
-                <Square 
-                    col
-                    row
-                    key={`square-${col}-${row}`} 
-                    onClick={() => handleClick(col, row)}
-                    selected={selected}
-                    number={selected ? typedNumber : null} 
-                />
+            <Square
+                col
+                row
+                key={`square-${col}-${row}`}
+                onClick={() => handleClick(col, row)}
+                selected={selected}
+                number={selected ? typedNumber : null}
+            />
         )
     }
 
@@ -68,7 +67,7 @@ const Board = () => {
 
     const handleClick = (col, row) => {
         setTypedNumber(null)
-        setSelectedColAndRow({ col, row})
+        setSelectedColAndRow({ col, row })
     }
 
     const lines = new Array(9).fill(null).map((element, index) => renderLine(index));
@@ -84,12 +83,17 @@ const Game = () => {
 
     return (
         <div className="game">
-            <div className="game-board">
-                <Board />
+            <h1>SUDOKU</h1>
+            <div className="board-edges">
+                <div className="game-board">
+                    <Board />
+                </div>
             </div>
         </div>
     );
 }
+
+const generateGameNumbers = () => {}
 
 // ========================================
 
