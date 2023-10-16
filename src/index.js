@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-const Square = ({ number, onClick }) => {
+const gameNumbers = new Array(9).fill(new Array(9).fill(null));
+
+const Square = ({ number, gameNumber, onClick }) => {
 
     const [currentNumber, setCurrentNumber] = useState(null);
 
@@ -15,7 +17,7 @@ const Square = ({ number, onClick }) => {
             className="square"
             onClick={onClick}
         >
-            {number ? number : currentNumber}
+            {gameNumber}
         </button>
     );
 }
@@ -34,9 +36,13 @@ const Board = () => {
             }
             setTypedNumber(key);
         });
-    }, [])
+    }, []);
+
+    
 
     const renderSquare = (col, row) => {
+
+        const gameNumber = 2; 
 
         const selected = col === selectedColAndRow.col && row === selectedColAndRow.row;
 
@@ -48,6 +54,7 @@ const Board = () => {
                 onClick={() => handleClick(col, row)}
                 selected={selected}
                 number={selected ? typedNumber : null}
+                gameNumber={gameNumber}
             />
         )
     }
@@ -93,7 +100,35 @@ const Game = () => {
     );
 }
 
-const generateGameNumbers = () => {}
+const generateAllGameNumbers = () => {
+    for (let i = 0; i < gameNumbers.length; i++) {
+        for (let j = 0; 0 < gameNumbers[i].length; j++) {
+            gameNumbers[i][j] = generateGameNumber();
+        }
+    }
+}
+
+const generateGameNumber = (col, row) => {
+
+    let number = generateRandomNumber();
+
+    while(gameNumbers[row].includes(number)) {
+        number = generateRandomNumber();
+    }
+
+    gameNumbers[row][col] = number;
+    return number;
+}
+
+const generateRandomNumber = () => {
+
+    const min = 1;
+    const max = 9;
+
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+//generateAllGameNumbers();
 
 // ========================================
 
