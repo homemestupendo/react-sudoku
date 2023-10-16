@@ -1,33 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
 const Square = props => {
 
-    const { col, row } = props;
+    const [currentNumber, setCurrentNumber] = useState(null);
+
+    console.log(currentNumber)
+
+    useEffect(() => {
+        setCurrentNumber(props.number ? props.number : currentNumber)
+    });
 
     return (
         <button
             className="square"
             onClick={props.onClick}
         >
-            {props.selected ? "T" : "F"}
+            {props.number ? props.number : currentNumber}
         </button>
     );
 }
 
 const Board = props => {
 
-    const [selected, setSelected] = useState({});
-    
+    const [selectedColAndRow, setSelectedColAndRow] = useState({});
+    const [typedNumber, setTypedNumber] = useState(null);
+
+    useEffect(() => {
+        document.addEventListener("keydown", event => setTypedNumber(event.key));
+    }, [])
+
     const renderSquare = (col, row) => {
+
+        const selected = col === selectedColAndRow.col && row === selectedColAndRow.row;
+
         return (
                 <Square 
-                    col={col} 
-                    row={row} 
+                    col
+                    row
                     key={`square-${col}-${row}`} 
                     onClick={() => handleClick(col, row)}
-                    selected={col === selected.col && row === selected.row} />
+                    selected={selected}
+                    number={selected ? typedNumber : null} 
+                />
         )
     }
 
@@ -45,7 +61,8 @@ const Board = props => {
     }
 
     const handleClick = (col, row) => {
-        setSelected({ col, row})
+        setTypedNumber(null)
+        setSelectedColAndRow({ col, row})
     }
 
 
@@ -70,8 +87,6 @@ const Game = () => {
 }
 
 // ========================================
-
-document.addEventListener("keydown", event => console.log(event.key));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
