@@ -13,13 +13,13 @@ const Square = props => {
 
 const Board = props => {
 
-    const renderSquare = (i) => {
-        return <Square key={`square-${i}`} onClick={handleClick} />;
+    const renderSquare = (index) => {
+        return <Square key={`square-${index}`} onClick={handleClick} />;
     }
 
-    const renderLine = () => {
+    const renderLine = index => {
         return (
-            <div className="board-row">
+            <div key={`row-${index}`} className="board-row">
                 {squares}
             </div>
         )
@@ -33,17 +33,11 @@ const Board = props => {
         return renderSquare(index);
     });
 
+    const lines = new Array(9).fill(null).map((element, index) => renderLine(index));
+
     return (
         <div>
-            {renderLine()} 
-            {renderLine()} 
-            {renderLine()}
-            {renderLine()} 
-            {renderLine()} 
-            {renderLine()}  
-            {renderLine()} 
-            {renderLine()} 
-            {renderLine()} 
+            {lines}
         </div>
     );
 }
