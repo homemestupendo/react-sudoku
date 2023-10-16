@@ -6,8 +6,6 @@ const Square = props => {
 
     const [currentNumber, setCurrentNumber] = useState(null);
 
-    console.log(currentNumber)
-
     useEffect(() => {
         setCurrentNumber(props.number ? props.number : currentNumber)
     });
@@ -22,13 +20,21 @@ const Square = props => {
     );
 }
 
-const Board = props => {
+const Board = () => {
 
     const [selectedColAndRow, setSelectedColAndRow] = useState({});
     const [typedNumber, setTypedNumber] = useState(null);
 
     useEffect(() => {
-        document.addEventListener("keydown", event => setTypedNumber(event.key));
+        document.addEventListener("keydown", event => {
+
+            const isValidNumber = /^[1-9]$/i.test(event.key);
+            if (!isValidNumber) {
+                return;
+            }
+            
+            setTypedNumber(event.key);
+        });
     }, [])
 
     const renderSquare = (col, row) => {
@@ -64,7 +70,6 @@ const Board = props => {
         setTypedNumber(null)
         setSelectedColAndRow({ col, row})
     }
-
 
     const lines = new Array(9).fill(null).map((element, index) => renderLine(index));
 
