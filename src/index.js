@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-const gameNumbers = new Array(9).fill(new Array(9).fill(null));
+const gameNumbers = new Array(9).fill(null);
+let invalidNumbers = new Set();
 
 const Square = ({ number, gameNumber, onClick }) => {
 
@@ -38,11 +39,11 @@ const Board = () => {
         });
     }, []);
 
-    
-
     const renderSquare = (col, row) => {
 
-        const gameNumber = 2; 
+        const gameNumber = gameNumbers[row][col]
+
+        //const gameNumber = Math.random() * 1 >= 0.5 ? gameNumbers[row][col] : null;
 
         const selected = col === selectedColAndRow.col && row === selectedColAndRow.row;
 
@@ -101,23 +102,66 @@ const Game = () => {
 }
 
 const generateAllGameNumbers = () => {
-    for (let i = 0; i < gameNumbers.length; i++) {
-        for (let j = 0; 0 < gameNumbers[i].length; j++) {
-            gameNumbers[i][j] = generateGameNumber();
+
+
+    for (var row = 0; row < gameNumbers.length; row++) {
+
+        gameNumbers[row] = [];
+
+    }
+
+    for (var row = 0; row < gameNumbers.length; row++) {
+
+        const shuffledGameNumbers = shuffleNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        for (let col = 0; col < 9; col++) {
+            gameNumbers[row].push(generateGameNumber(shuffledGameNumbers, col, row));
         }
+
+        invalidNumbers.clear();
     }
 }
 
-const generateGameNumber = (col, row) => {
+const generateGameNumber = (shuffledGameNumbers, col, row) => {
 
-    let number = generateRandomNumber();
+    console.log(shuffledGameNumbers)
+    let counter = 0;
 
-    while(gameNumbers[row].includes(number)) {
-        number = generateRandomNumber();
+    let number = shuffledGameNumbers[counter];
+    console.log(number)
+
+    while (gameNumbers[row].includes(number) || columnIncludes(col, row, number)) {
+        console.log("STUCK")
+        counter++;
+        number = shuffledGameNumbers[counter]
+        console.log("COL", col)
+        console.log("ROW", row)
+        console.log("INSIDE NUMBER ", number);
+        console.log("INSIDE ARRAY ", shuffledGameNumbers);
+        console.log(gameNumbers)
+
+        if(number === undefined) {
+            return;
+        }
     }
 
-    gameNumbers[row][col] = number;
     return number;
+}
+
+const columnIncludes = (col, rowToSkip, number) => {
+
+    for (let row = 0; row < gameNumbers.length; row++) {
+
+        if (row === rowToSkip) {
+            continue;
+        }
+
+        if (gameNumbers[row][col] === number) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const generateRandomNumber = () => {
@@ -128,9 +172,17 @@ const generateRandomNumber = () => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-//generateAllGameNumbers();
+const shuffleNumbers = array => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
 
-// ========================================
-
+generateAllGameNumbers();
+console.log("Done")
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
