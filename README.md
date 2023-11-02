@@ -6,4 +6,4 @@ This is a small project developed in a few of days to practice some react and al
 
 Clone the repository and run `npm start` at the root of the project
 
-![A Sudoku game made with React](https://ibb.co/GHgcZbN)
+[A Sudoku game made with React](https://imgur.com/Vofyjau)
