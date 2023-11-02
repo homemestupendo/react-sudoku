@@ -1,9 +1,16 @@
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
-  background-color: rgb(208, 157, 255);
   display: flex;
   justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(189, 119, 255) 0px,
+    rgb(189, 119, 255) 500px,
+    rgb(208, 157, 255) 500px,
+    rgb(208, 157, 255) 600px
+  );
+  height: 100vh;
 }
 
 ol, ul {
@@ -64,3 +71,5 @@ h1 {
     margin: 0px;
     margin-bottom: 20px;
 }
+
+
